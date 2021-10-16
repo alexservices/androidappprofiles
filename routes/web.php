@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoadUser;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\PuestoLaboralController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,5 +20,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
+Route::get('perfiles', [PuestoLaboralController::class, 'index'])->name('perfiles.index');
+Route::resource('user',UserController::class);

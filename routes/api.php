@@ -24,3 +24,4 @@ Route::post('/load_data', [LoadUser::class, 'load_data']);
 Route::post('/login', [UserController::class, 'login']);
 Route::get('/listar_usuarios', [UserController::class, 'listar_usuarios']);
 Route::get('/consultar_usuario', [UserController::class, 'consultar_usuario']);
+Route::post('/edit_user', [UserController::class, 'edit']);

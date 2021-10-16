@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Puesto_Laboral;
+use DB;
 
 class User extends Authenticatable
 {
@@ -56,6 +57,8 @@ class User extends Authenticatable
         return $this->hasMany(Puesto_Laboral::class);
         
     }
+
+  
 
 
 }

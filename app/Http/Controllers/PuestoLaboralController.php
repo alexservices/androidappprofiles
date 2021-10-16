@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Puesto_Laboral;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class PuestoLaboralController extends Controller
 {
@@ -14,8 +15,13 @@ class PuestoLaboralController extends Controller
      */
     public function index()
     {
-        //
+        $puestos = Puesto_Laboral::puesto_usuario()
+        ->simplepaginate(2);
+        return view ('profiles.index', compact('puestos'))
+        ; 
+
     }
+
 
     /**
      * Show the form for creating a new resource.
