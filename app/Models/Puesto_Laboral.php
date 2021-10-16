@@ -17,6 +17,17 @@ class Puesto_Laboral extends Model
         return $this->belongsTo(User::class);
     }
 
+
+    protected $fillable = [
+        'titulo',
+        'tiempo',
+        'empresa',
+        'tipo',
+        'user_id'
+    ];
+
+
+
     public static function puesto_usuario(){
 		return DB::table('puesto__laborals')
 			->join('users','users.id','=','puesto__laborals.user_id')

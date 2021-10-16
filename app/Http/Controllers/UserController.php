@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Puesto_Laboral;
+use Illuminate\Support\Facades\Validator;
+use App\Models\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -88,12 +93,10 @@ class UserController extends Controller
             'edad'=> 'required',
             'sexo'=> 'required',
             'direccion'=> 'required',
-            'telefono_casa'=> 'required',
             'telefono_celular'=> 'required',
-            'works'=>'required',
             'id'=>'required'
         ]);
-
+        
         if($validator->fails()){
             $response['errors'] = $validator->errors();
             $response['result'] = false;
@@ -126,9 +129,11 @@ class UserController extends Controller
                         'imagen' => 'mimes:jpeg,png,gif,tif,bmp|max:1014',
                     ]);
                     $extension = $request->imagen->extension();
-                    $request->imagen->storeAs('/public', $validated['name'].".".$extension);
-                    $url = Storage::url($validated['name'].".".$extension);
-                    $user->imagen=$url; 
+                    $filename= Carbon::now()."_". $validated['name'].".".$extension;
+                    $request->imagen->storeAs('/', $filename);
+                    $url = $validated['name'].".".$extension;
+
+                    $user->imagen=$filename; 
                 }
             }
             $user->save();
@@ -145,8 +150,17 @@ class UserController extends Controller
 
         }
 
-
+        return $response;
        
+
+    }
+
+
+    public function alta_usuario(){
+
+
+
+
 
     }
 

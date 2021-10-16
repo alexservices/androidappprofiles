@@ -16,7 +16,7 @@ class PuestoLaboralController extends Controller
     public function index()
     {
         $puestos = Puesto_Laboral::puesto_usuario()
-        ->simplepaginate(2);
+        ->simplepaginate(4);
         return view ('profiles.index', compact('puestos'))
         ; 
 

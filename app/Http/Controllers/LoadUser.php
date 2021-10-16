@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Puesto_Laboral;
+use App\Models\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 
 class LoadUser extends Controller
 {
@@ -21,7 +25,6 @@ class LoadUser extends Controller
             'edad'=> 'required',
             'sexo'=> 'required',
             'direccion'=> 'required',
-            'telefono_casa'=> 'required',
             'telefono_celular'=> 'required',
             'works'=>'required'
         ]);
@@ -32,8 +35,28 @@ class LoadUser extends Controller
         }
         
         else{
-            $response['records'] = $request;
             $user = new User;
+
+            if ($request->hasFile('imagen')) {
+                
+                if ($request->file('imagen')->isValid()) {
+                    //
+                    $validated = $request->validate([
+                        'name' => 'string|max:40',
+                        'imagen' => 'mimes:jpeg,png,gif,tif,bmp|max:1014',
+                    ]);
+                    $extension = $request->imagen->extension();
+                    $filename= Carbon::now()."_". $validated['name'].".".$extension;
+                    $request->imagen->storeAs('/', $filename);
+                    $url = $validated['name'].".".$extension;
+                    $user->imagen=$filename; 
+                    
+                }
+            }
+
+
+            $response['records'] = $request;
+            
             $user->name=$request->name;
             $user->email=$request->email;
             $user->password=\Hash::make($request->password);
@@ -44,7 +67,9 @@ class LoadUser extends Controller
             $user->direccion=$request->direccion;
             $user->telefono_casa=$request->telefono_casa;
             $user->telefono_celular=$request->telefono_celular;
+            
             $user->save();
+
             $recorrer=json_decode($request->works,true);
             $array_works = array();
             foreach( $recorrer as $key => $value){
@@ -60,7 +85,7 @@ class LoadUser extends Controller
             $user->works=$array_works;    
             $response['records'] = $user;
             $response['result'] =true;
-            return $response;
+          
         }
         return $response;
 

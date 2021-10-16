@@ -28,7 +28,6 @@ class User extends Authenticatable
         'edad',
         'sexo',
         'direccion',
-        'telefono_casa',
         'telefono_celular'
 
     ];
@@ -59,6 +58,4 @@ class User extends Authenticatable
     }
 
   
-
-
 }

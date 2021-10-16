@@ -36,7 +36,7 @@
         <!-- Page Content-->
         <div class="container-fluid p-0">
             <!-- About-->
-            <img src="{{asset('assets/img/profile.jpg')}}" alt="Responsive image" class="img-circle">
+            <img src="{{url('profiles/'. $user->imagen)}}" class="img-circle" style="with:400px;height:400px;">
             <section class="resume-section" id="about">
                 <div class="resume-section-content">
                     <ul class="list-group">
