@@ -37,24 +37,7 @@ class LoadUser extends Controller
         else{
             $user = new User;
 
-            if ($request->hasFile('imagen')) {
-                
-                if ($request->file('imagen')->isValid()) {
-                    //
-                    $validated = $request->validate([
-                        'name' => 'string|max:40',
-                        'imagen' => 'mimes:jpeg,png,gif,tif,bmp|max:1014',
-                    ]);
-                    $extension = $request->imagen->extension();
-                    $filename= Carbon::now()."_". $validated['name'].".".$extension;
-                    $request->imagen->storeAs('/', $filename);
-                    $url = $validated['name'].".".$extension;
-                    $user->imagen=$filename; 
-                    
-                }
-            }
-
-
+            
             $response['records'] = $request;
             
             $user->name=$request->name;

@@ -10,6 +10,8 @@ use App\Models\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
+use Illuminate\Support\Str; 
+use DB;
 
 class UserController extends Controller
 {
@@ -18,7 +20,6 @@ class UserController extends Controller
     {
 
         $response = array();
-    
         $user = User::where('email', $request->email)
             ->first();
         if($user){
@@ -51,7 +52,13 @@ class UserController extends Controller
 
     public function listar_usuarios(){
         $response = array();    
-        $users=User::all();
+      
+        $users= DB::table('puesto__laborals')
+			->join('users','users.id','=','puesto__laborals.user_id')
+			->select('users.imagen','users.name','users.id', 'puesto__laborals.titulo','puesto__laborals.tiempo')
+            ->where('tipo', '0')
+			->get();
+
         $response['result']=true;
         $response['records']=$users;
         return $response;  
@@ -108,7 +115,7 @@ class UserController extends Controller
             if($user){
             $user->name=$request->name;
             $user->email=$request->email;
-            if(isset($request->password))
+            if(isset($request->password) && Str::length($user->password)>0)
             {
             $user->password=\Hash::make($request->password);
             }
@@ -119,23 +126,6 @@ class UserController extends Controller
             $user->direccion=$request->direccion;
             $user->telefono_casa=$request->telefono_casa;
             $user->telefono_celular=$request->telefono_celular;
-
-            if ($request->hasFile('imagen')) {
-                //  Let's do everything here
-                if ($request->file('imagen')->isValid()) {
-                    //
-                    $validated = $request->validate([
-                        'name' => 'string|max:40',
-                        'imagen' => 'mimes:jpeg,png,gif,tif,bmp|max:1014',
-                    ]);
-                    $extension = $request->imagen->extension();
-                    $filename= Carbon::now()."_". $validated['name'].".".$extension;
-                    $request->imagen->storeAs('/', $filename);
-                    $url = $validated['name'].".".$extension;
-
-                    $user->imagen=$filename; 
-                }
-            }
             $user->save();
             $puesto_laborales=Puesto_Laboral::where('user_id',$user->id)
                 ->get();   
@@ -155,15 +145,44 @@ class UserController extends Controller
 
     }
 
+    public function load_image(Request $request){
+        $response = array();    
+        $users=User::where('id',$request->id)
+            ->first();
+          
+        if($users){ 
+            if ($request->file('imagen')!=null) {
+                if ($request->file('imagen')->isValid()) {
+                    //
+                    $validated = $request->validate([
+                        'name' => 'string|max:40',
+                        'imagen' => 'mimes:jpeg,png,gif,tif,bmp|max:1014',
+                    ]);
+                    $extension = $request->imagen->extension();
+                    $filename= Carbon::now()."_". $validated['name'].".".$extension;
+                    $request->imagen->storeAs('/', $filename);
+                    $url = $validated['name'].".".$extension;
+                    $users->imagen=$filename; 
+                    $users->save();
 
-    public function alta_usuario(){
+                    $puesto_laborales=Puesto_Laboral::where('user_id',$users->id)
+                         ->get();
+                    $users->works=$puesto_laborales;
+                    $response['result']=true;
+                    $response['records']=$users;
 
+                    return $response;
+                }
 
-
-
-
+            }
+            
+        }
+        else{
+            $response['result']=false;
+            $response['message']="Usuario no encontrado";
+        }
+        return $response;  
     }
-
    
    
 }

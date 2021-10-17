@@ -22,3 +22,7 @@ Route::get('/', function () {
 
 Route::get('perfiles', [PuestoLaboralController::class, 'index'])->name('perfiles.index');
 Route::resource('user',UserController::class);
+
+Auth::routes(['register' => false]);
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

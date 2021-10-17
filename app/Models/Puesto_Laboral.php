@@ -31,7 +31,7 @@ class Puesto_Laboral extends Model
     public static function puesto_usuario(){
 		return DB::table('puesto__laborals')
 			->join('users','users.id','=','puesto__laborals.user_id')
-			->select('users.name','users.id', 'puesto__laborals.titulo','puesto__laborals.tiempo')
+			->select('users.imagen','users.name','users.id', 'puesto__laborals.titulo','puesto__laborals.tiempo')
             ->where('tipo', '0')
 			;
 	}
