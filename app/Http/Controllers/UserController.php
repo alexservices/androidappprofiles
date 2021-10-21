@@ -12,10 +12,12 @@ use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use Illuminate\Support\Str; 
 use DB;
+use Redirect;
 
 class UserController extends Controller
 {
 
+    
     public function login(Request $request)
     {
 
@@ -88,6 +90,15 @@ class UserController extends Controller
         $puestos= $user->puesto_laboral()->get();
         return view( 'profiles.resume',['user'=>$user,'puestos'=>$puestos]);
     }
+
+    public function destroy($id)
+    {
+        $user= User::find($id);
+        $user->delete();
+        Session::flash('message','Usuario eliminado correctamente');
+        return Redirect::to('/perfiles');
+    }
+
 
     public function edit(Request $request){
 
@@ -182,6 +193,11 @@ class UserController extends Controller
             $response['message']="Usuario no encontrado";
         }
         return $response;  
+
+    
+
+
+
     }
    
    

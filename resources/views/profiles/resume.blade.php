@@ -1,3 +1,4 @@
+@include('layouts.app')
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -36,7 +37,15 @@
         <!-- Page Content-->
         <div class="container-fluid p-0">
             <!-- About-->
-            <img src="{{url('profiles/'. $user->imagen)}}" class="img-circle" style="with:400px;height:400px;">
+            
+            @if(isset($user->imagen))
+            <img src="{{url('profiles/'. $user->imagen)}}" class="img-circle" alt="" style="width:400px;"/>
+            @else
+            <img src="https://image.flaticon.com/icons/png/512/64/64572.png" alt="" style="width:180px;"/>
+            @endif
+
+            <!-- <img src="{{url('profiles/'. $user->imagen)}}" class="img-circle" style="with:400px;height:400px;"> -->
+
             <section class="resume-section" id="about">
                 <div class="resume-section-content">
                     <ul class="list-group">
@@ -70,8 +79,18 @@
 
                 </ul>
                 </div>
+
             </section>
-            
+            @guest
+                @if (Route::has('register'))
+                @endif
+                @else
+                @if(Auth::user()->id==20)
+                {!!Form::open(['route'=> ['user.destroy', $user->id],'method'=>'DELETE']) !!}
+                {!!Form::submit('Eliminar Usuario', ['class' =>'btn btn-danger'])!!}
+                {!!Form::close() !!} 
+                @endif
+            @endguest
            
         </div>
         <!-- Bootstrap core JS-->
